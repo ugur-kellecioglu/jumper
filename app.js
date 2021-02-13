@@ -59,14 +59,17 @@ class Player{
 const player = new Player(100, canvas.height/2, 100, 100)
 
 class Obstacle{
-    constructor(x, y, height, width){
+    constructor(x, y, height, width, color){
         this.x = x
         this.y = y
         this.height = height
         this.width = width
+        this.color = color
     }
 
     draw(){
+        
+        ctx.fillStyle = "hsl("+this.color+")"
         ctx.fillRect(this.x, this.y, this.width, this.height)
     }
     update(){
@@ -75,9 +78,15 @@ class Obstacle{
 }
 var obstacles = []
 setInterval(() => {
-    obstacles.push(new Obstacle(canvas.width,50+(canvas.height/2),50,50 ))
+    let color = Math.random()*256
+    let w = Math.floor((Math.random()*(50-20)+20))
+    let h = Math.floor((Math.random()*(50-20)+20))
+    let obsHeight = (player.height-h+(canvas.height/2))
+    obstacles.push(new Obstacle(canvas.width, obsHeight, h, w, (color+', 100%, 50%')))
 }, 1000);
 
+let scoreEl = document.getElementById('score')
+let score = 0
 function animate(){
     requestAnimationFrame(animate)
 
@@ -91,6 +100,8 @@ function animate(){
     obstacles.forEach((obstacle, index) => {
         if(obstacle.x < 0){
             obstacles.splice(index,1)
+            score++
+            scoreEl.innerHTML = score
         }
     })
 }
